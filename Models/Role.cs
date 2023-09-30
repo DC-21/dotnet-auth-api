@@ -1,8 +1,10 @@
 using System;
+using AspNetCore.Identity.MongoDbCore;
 using AspNetCore.Identity.MongoDbCore.Models;
 using MongoDbGenericRepository.Attributes;
 
-namespace AuthApi.Models{
+namespace AuthApi.Models
+{
     [CollectionName("roles")]
-    public class Role:MongoIdentityRole<Guid>{}
+    public class Rode: MongoIdentityRole<Guid>{}
 }
