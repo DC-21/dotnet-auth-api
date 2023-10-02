@@ -5,6 +5,6 @@ using MongoDbGenericRepository.Attributes;
 
 namespace AuthApi.Models
 {
-    [CollectionName("roles")]
+    [CollectionName("role")]
     public class Role: MongoIdentityRole<Guid>{}
 }

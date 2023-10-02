@@ -3,7 +3,7 @@ using AspNetCore.Identity.MongoDbCore.Models;
 using MongoDbGenericRepository.Attributes;
 
 namespace AuthApi{
-    [CollectionName("appusers")]
+    [CollectionName("user")]
     public class User: MongoIdentityUser<Guid>{
         public String FullName {get; set;} = String.Empty;
     }

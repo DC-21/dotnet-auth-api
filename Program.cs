@@ -1,24 +1,30 @@
+using System.Text;
 using AspNetCore.Identity.MongoDbCore.Extensions;
 using AspNetCore.Identity.MongoDbCore.Infrastructure;
 using AuthApi;
 using AuthApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.IdentityModel.Tokens;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Serializers;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-BsonSerializer.RegisterSerializer( new GuidSerializer(MongoDB.Bson.BsonType.String));
-BsonSerializer.RegisterSerializer( new DateTimeSerializer(MongoDB.Bson.BsonType.String));
-BsonSerializer.RegisterSerializer( new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
+BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.BsonType.String));
+BsonSerializer.RegisterSerializer(new DateTimeSerializer(MongoDB.Bson.BsonType.String));
+BsonSerializer.RegisterSerializer(new DateTimeOffsetSerializer(MongoDB.Bson.BsonType.String));
 
-var mongoDbIdentityConfig = new MongoDbIdentityConfiguration{
-    MongoDbSettings = new MongoDbSettings{
+var mongoDbIdentityConfig = new MongoDbIdentityConfiguration
+{
+    MongoDbSettings = new MongoDbSettings
+    {
         ConnectionString = "",
-        DatabaseName = "",
+        DatabaseName = "Auth",
     },
-    IdentityOptionsAction = options => {
+    IdentityOptionsAction = options =>
+    {
         options.Password.RequireDigit = false;
         options.Password.RequiredLength = 8;
         options.Password.RequireNonAlphanumeric = true;
@@ -38,6 +44,26 @@ builder.Services.ConfigureMongoDbIdentity<User, Role, Guid>(mongoDbIdentityConfi
 .AddRoleManager<RoleManager<Role>>()
 .AddDefaultTokenProviders();
 
+builder.Services.AddAuthentication(x =>
+{
+    x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = true;
+    x.SaveToken = true;
+    x.TokenValidationParameters=new TokenValidationParameters{
+        ValidateIssuerSigningKey=true,
+        ValidateIssuer=true,
+        ValidateAudience=true,
+        ValidateLifetime=true,
+        ValidIssuer="https://localhost:5001",
+        ValidAudience="https://localhost:5001",
+        IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lswek3u4uo2u4"))
+    };
+});
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -53,6 +79,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 
 app.UseAuthorization();
 
