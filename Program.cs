@@ -1,3 +1,4 @@
+using AspNetCore.Identity.MongoDbCore.Extensions;
 using AspNetCore.Identity.MongoDbCore.Infrastructure;
 using AuthApi;
 using AuthApi.Models;
@@ -30,6 +31,12 @@ var mongoDbIdentityConfig = new MongoDbIdentityConfiguration{
         options.User.RequireUniqueEmail = true;
     }
 };
+
+builder.Services.ConfigureMongoDbIdentity<User, Role, Guid>(mongoDbIdentityConfig)
+.AddUserManager<UserManager<User>>()
+.AddSignInManager<SignInManager<User>>()
+.AddRoleManager<RoleManager<Role>>()
+.AddDefaultTokenProviders();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
