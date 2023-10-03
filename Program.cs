@@ -60,7 +60,7 @@ builder.Services.AddAuthentication(x =>
         ValidateLifetime=true,
         ValidIssuer="https://localhost:5001",
         ValidAudience="https://localhost:5001",
-        IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lswek3u4uo2u4"))
+        IssuerSigningKey=new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lswek3u4uo2u4a6e"))
     };
 });
 

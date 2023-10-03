@@ -97,7 +97,7 @@ namespace AuthApi.Controllers
                 var roleClaims = roles.Select(x => new Claim(ClaimTypes.Role, x));
                 claims.AddRange(roleClaims);
 
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lswek3u4uo2u4"));
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lswek3u4uo2u4a6e"));
                 var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
                 var expires = DateTime.Now.AddMinutes(30);
 
