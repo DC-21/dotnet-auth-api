@@ -20,7 +20,7 @@ var mongoDbIdentityConfig = new MongoDbIdentityConfiguration
 {
     MongoDbSettings = new MongoDbSettings
     {
-        ConnectionString = "",
+        ConnectionString = "mongodb+srv://codedr21:codedr21@cluster0.95jsvaa.mongodb.net/?retryWrites=true&w=majority",
         DatabaseName = "Auth",
     },
     IdentityOptionsAction = options =>

@@ -17,10 +17,22 @@ namespace AuthApi.Controllers
     public class AuthenticationController : ControllerBase
     {
         private readonly UserManager<User> _userManager;
-        public AuthenticationController(UserManager<User> userManager)
+        private readonly RoleManager<Role> _roleManager;
+        public AuthenticationController(UserManager<User> userManager,RoleManager<Role>roleManager)
         {
             _userManager = userManager;
+            _roleManager = roleManager;
         }
+        [HttpPost][Route("role/add")]
+        public async Task<IActionResult>CreateRole([FromBody]CreateRoleRequest request)
+        {
+            var role = new Role { Name = request.Role };
+            var createRole = await _roleManager.CreateAsync(role);
+
+            return Ok(new {Message = "role created successfully"});
+        }
+
+
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest request)
@@ -49,6 +61,10 @@ namespace AuthApi.Controllers
                 if (!addUserToRoleResult.Succeeded)
                     return new RegisterResponse { Message = $"create user succeded but could not add to role {addUserToRoleResult?.Errors?.First()?.Description}", Success = false };
 
+                    return new RegisterResponse{
+                        Success = true,
+                        Message = "User registered successfully"
+                    };
             }
             catch (Exception ex)
             {
